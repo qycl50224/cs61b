@@ -94,10 +94,52 @@ public class IntList {
         return null;
     }
 
+    /** get the ith of a in a IntList, well, i understand the question in
+        a wrong way.... */
+
+    public int get(int a) {
+        IntList L = this;
+        int count = 0;
+        while(L != null) {
+            count += 1;
+            if(L.first == a) {
+                return count;
+            }
+            L = L.rest; 
+        }
+        return 0;
+    }
 
 
+    public static IntList square(IntList L) {
+        if(L == null) {
+            return L;
+        } else {
+            IntList rest = square(L.rest);
+            IntList m = new IntList(L.first*L.first, rest);
+        }
+        return m;
+    }
 
 
+    public static IntList squareDestructive(IntList L) {
+        if(L == null) {
+            return L;
+        } else {
+            squareDestructive(L.rest);
+            L.first *= L.first;
+        }
+        return L;
+    }
+
+    public void addFirst(int x) {
+        Intlist p  = this;
+        Intlist P = new Intlist(x, P); 
+    }
+
+    public Intlist getFirst() {
+        return this.first;
+    }
 
 
 
