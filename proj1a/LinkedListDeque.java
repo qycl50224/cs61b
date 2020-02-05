@@ -15,7 +15,9 @@ public class LinkedListDeque<T> {
 
 	public LinkedListDeque() {
 		size = 0;
-		sentinel = new IntNode(null , sentinel, sentinel);
+		sentinel = new IntNode(null , null, null);
+		sentinel.prev = sentinel;
+		sentinel.next = sentinel;
 	}
 
 	public LinkedListDeque(T t) {
@@ -43,11 +45,13 @@ public class LinkedListDeque<T> {
 		size += 1;
 		IntNode p = new IntNode(item, sentinel, sentinel.next);
 		sentinel.next = p;
+		sentinel.prev = p;
 	}
 
 	public void addLast(T item) {
 		size += 1;
 		IntNode p = new IntNode(item, sentinel.prev, sentinel);
+		sentinel.prev.next = p;
 		sentinel.prev = p;
 	}
 
@@ -71,7 +75,7 @@ public class LinkedListDeque<T> {
 	/* print items of a Deque line by line */
 	public void printDeque() {
 		IntNode p = sentinel.next;
-		while(p != null) {
+		while(p.item != null) {
 			System.out.println(p.item);
 			p = p.next;
 		}
@@ -102,25 +106,28 @@ public class LinkedListDeque<T> {
 	}
 
 
-//	/* here are some test used to check code runing */
-//
-//	public static void main(String[] args) {
-//		LinkedListDeque<Integer> li = new LinkedListDeque<>();
-//		li.addFirst(5);
-//		// System.out.println(li.size());
-//		li.addLast(10);
-//		li.addLast(15);
-//		// System.out.println(li.size());
-//		li.removeLast();
-//		// System.out.println(li.size());
-//		li.addFirst(100);
-//		li.addFirst(1235);
-//		// li.printDeque();
-//		// System.out.println(li.get(0));
-//		// System.out.println(li.get(1));
-//		System.out.println(li.getRecursive(0));
-//		System.out.println(li.getRecursive(1));
-//		System.out.println(li.getRecursive(2));
-//		System.out.println(li.getRecursive(2));
-//	}
+	/* here are some test used to check code runing */
+
+	public static void main(String[] args) {
+		LinkedListDeque<Character> li = new LinkedListDeque<>();
+		char a = 'a';
+		char b = 'b';
+		char c = 'c';
+		char d = 'd';
+		char e = 'e';
+		char f = 'f';
+		// li.addFirst(a);
+		// System.out.println(li.size());
+		li.addLast(b);
+		// li.printDeque();
+		li.addLast(c);
+		// System.out.println(li.size());
+		// li.removeLast();
+		// System.out.println(li.size());
+		li.addFirst(d);
+		li.addFirst(e);
+		li.removeFirst();
+		li.printDeque();
+
+	}
 }
