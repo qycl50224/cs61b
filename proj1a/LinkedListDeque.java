@@ -102,25 +102,25 @@ public class LinkedListDeque<T> {
 	}
 
 
-	/* here are some test used to check code runing */
-
-	public static void main(String[] args) {
-		LinkedListDeque<Integer> li = new LinkedListDeque<>();
-		li.addFirst(5);
-		// System.out.println(li.size());
-		li.addLast(10);
-		li.addLast(15);
-		// System.out.println(li.size());
-		li.removeLast();
-		// System.out.println(li.size());
-		li.addFirst(100);
-		li.addFirst(1235);
-		// li.printDeque();
-		// System.out.println(li.get(0));
-		// System.out.println(li.get(1));
-		System.out.println(li.getRecursive(0));
-		System.out.println(li.getRecursive(1));
-		System.out.println(li.getRecursive(2));
-		System.out.println(li.getRecursive(2));
-	}
+//	/* here are some test used to check code runing */
+//
+//	public static void main(String[] args) {
+//		LinkedListDeque<Integer> li = new LinkedListDeque<>();
+//		li.addFirst(5);
+//		// System.out.println(li.size());
+//		li.addLast(10);
+//		li.addLast(15);
+//		// System.out.println(li.size());
+//		li.removeLast();
+//		// System.out.println(li.size());
+//		li.addFirst(100);
+//		li.addFirst(1235);
+//		// li.printDeque();
+//		// System.out.println(li.get(0));
+//		// System.out.println(li.get(1));
+//		System.out.println(li.getRecursive(0));
+//		System.out.println(li.getRecursive(1));
+//		System.out.println(li.getRecursive(2));
+//		System.out.println(li.getRecursive(2));
+//	}
 }
