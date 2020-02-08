@@ -1,7 +1,7 @@
 package huglife;
 
 import org.junit.Test;
-
+import creatures.*;
 import static org.junit.Assert.*;
 
 /**
@@ -26,6 +26,15 @@ public class TestHugLife {
         g.drawWorld();
         StdDraw.show(20);
 
+    }
+
+    @Test
+    public void testReplicate() {
+        Creature plip1 = new Plip(2);
+        assertEquals(plip1.energy(), 2, 0);
+        assertEquals(plip1.replicate().energy(), plip1.energy(),0);
+        assertEquals(plip1.energy(), 1, 0);
+        assertNotEquals(plip1.replicate(), plip1);
     }
 
     public static void main(String[] args) {

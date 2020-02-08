@@ -10,6 +10,8 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Map;
 
+import static huglife.HugLifeUtils.randomEntry;
+
 /**
  * An implementation of a motile pacifist photosynthesizer.
  *
@@ -30,14 +32,16 @@ public class Plip extends Creature {
      */
     private int b;
 
+    private double moveProbability = 0.5;
+
     /**
      * creates plip with energy equal to E.
      */
     public Plip(double e) {
         super("plip");
-        r = 0;
-        g = 0;
-        b = 0;
+        r = 99;
+        g = (int) (63+96*e);
+        b = 76;
         energy = e;
     }
 
@@ -57,7 +61,7 @@ public class Plip extends Creature {
      * that you get this exactly correct.
      */
     public Color color() {
-        g = 63;
+        g = (int) (63+96*this.energy);
         return color(r, g, b);
     }
 
@@ -75,6 +79,8 @@ public class Plip extends Creature {
      */
     public void move() {
         // TODO
+        this.energy -= 0.15;
+        this.checkEnergy();
     }
 
 
@@ -83,6 +89,8 @@ public class Plip extends Creature {
      */
     public void stay() {
         // TODO
+        this.energy += 0.2;
+        this.checkEnergy();
     }
 
     /**
@@ -91,7 +99,9 @@ public class Plip extends Creature {
      * Plip.
      */
     public Plip replicate() {
-        return this;
+        Plip plipSon = new Plip(0.5*this.energy);
+        this.energy /= 2;
+        return plipSon;
     }
 
     /**
@@ -114,17 +124,47 @@ public class Plip extends Creature {
         // TODO
         // (Google: Enhanced for-loop over keys of NEIGHBORS?)
         // for () {...}
-
-        if (false) { // FIXME
+        for( Direction dir: neighbors.keySet()) {
+            if(neighbors.get(dir).name().equals("clorus")) {
+                anyClorus = true;
+            }
+            if(neighbors.get(dir).name().equals("empty")) {
+                emptyNeighbors.add(dir);
+            }
+        }
+        if (emptyNeighbors.size() == 0) { // FIXME
             // TODO
+            return new Action(Action.ActionType.STAY);
         }
 
         // Rule 2
         // HINT: randomEntry(emptyNeighbors)
+       else if (this.energy() >= 1) {
+            Plip RePlip = this.replicate();
+            return new Action(Action.ActionType.REPLICATE, randomEntry(emptyNeighbors));
 
+        }
         // Rule 3
-
+        else if(anyClorus) {
+            if(Math.random() < moveProbability) {
+                return new Action(Action.ActionType.MOVE, randomEntry(emptyNeighbors));
+            }
+        }
         // Rule 4
         return new Action(Action.ActionType.STAY);
     }
+
+    private void checkEnergy() {
+        if(this.energy() > 2) {
+            this.energy = 2;
+        } else if(this.energy() < 0) {
+            this.energy = 0;
+        }
+    }
+
+    public String name() {
+        return "plip";
+    }
+
+
 }
