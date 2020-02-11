@@ -9,10 +9,6 @@ import huglife.Occupant;
 import huglife.Impassible;
 import huglife.Empty;
 
-/** Tests the Clorus class
- *  @authr FIXME
- */
-
 public class TestClorus {
 
     @Test
