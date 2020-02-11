@@ -1,9 +1,6 @@
-import java.util.ArrayDeque;
-
 public class UnionFind {
 
     // TODO - Add instance variables?
-    private int size;
     private int[] ds;
 
 
@@ -20,37 +17,28 @@ public class UnionFind {
     /* Throws an exception if v1 is not a valid index. */
     private void validate(int vertex) {
         // TODO
-        if(vertex < 0) {
-            throw new IllegalArgumentException("vertex should larger or equal than 0");
+        if(vertex < 0 || vertex > ds.length) {
+            throw new IllegalArgumentException("Invalid Argument");
         }
     }
 
     /* Returns the size of the set v1 belongs to. */
     public int sizeOf(int v1) {
         // TODO
-        int size = 1;
-        while(ds[v1] != -1) {
-            size += 1;
-            v1 = ds[v1];
-        }
-        return size;
+        validate(v1);
+        return -parent(find(v1));
     }
 
     /* Returns the parent of v1. If v1 is the root of a tree, returns the
        negative size of the tree for which v1 is the root. */
     public int parent(int v1) {
-        // TODO
-        if(ds[v1] == -1) {
-            return -sizeOf(v1);
-        } else {
-            return ds[v1];
-        }
+        return ds[v1];
     }
 
     /* Returns true if nodes v1 and v2 are connected. */
     public boolean connected(int v1, int v2) {
         // TODO
-        return parent(v1) == parent(v2);
+        return find(v1) == find(v2);
     }
 
     /* Connects two elements v1 and v2 together. v1 and v2 can be any valid 
@@ -60,14 +48,17 @@ public class UnionFind {
        change the sets but may alter the internal structure of the data. */
     public void union(int v1, int v2) {
         // TODO
-        int h1 = find(v1);
-        int h2 = find(v2);
-        if(connected(v1,v2)) {
-            throw new IllegalArgumentException();
-        } else if(sizeOf(v1) < sizeOf(v2)) {
-            ds[h1] = h2;
-        } else if(sizeOf(v1) < sizeOf(v2)) {
-            ds[h2] = h1;
+        int size1 = sizeOf(v1);
+        int size2 = sizeOf(v2);
+        if(size1 < size2) {
+            ds[find(v1)] = find(v2);
+            ds[find(v2)] -= sizeOf(v1);
+        } else if(size1 > size2) {
+            ds[find(v2)] = find(v1);
+            ds[find(v1)] -= sizeOf(v2);
+        } else {
+            ds[find(v1)] = find(v2);
+            ds[find(v2)] -= sizeOf(v1);
         }
     }
 
@@ -75,15 +66,17 @@ public class UnionFind {
        allowing for fast search-time. */
     public int find(int vertex) {
         // TODO
-        ArrayDeque<Integer> vertexes = new ArrayDeque();
-        while(ds[vertex] != -1) {
-            vertexes.add(vertex);
-            vertex = ds[vertex];
+        validate(vertex);
+        int root = vertex;
+        while(ds[root] != -1) {
+            root = ds[root];
         }
-        for(int item: vertexes) {
-            ds[vertexes.removeFirst()] = vertex;
+        int currentParent = ds[vertex];
+        while(currentParent != root) {
+            ds[vertex] = root;
+            vertex = currentParent;
+            currentParent = ds[vertex];
         }
-        return vertex;
+        return root;
     }
-
 }
