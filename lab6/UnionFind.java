@@ -9,7 +9,7 @@ public class UnionFind {
     public UnionFind(int n) {
         // TODO
         ds = new int[n];
-        for(int i: ds) {
+        for(int i = 0; i < n; i++ ) {
             ds[i] = -1;
         }
     }
@@ -32,12 +32,15 @@ public class UnionFind {
     /* Returns the parent of v1. If v1 is the root of a tree, returns the
        negative size of the tree for which v1 is the root. */
     public int parent(int v1) {
+        validate(v1);
         return ds[v1];
     }
 
     /* Returns true if nodes v1 and v2 are connected. */
     public boolean connected(int v1, int v2) {
         // TODO
+        validate(v1);
+        validate(v2);
         return find(v1) == find(v2);
     }
 
@@ -48,17 +51,21 @@ public class UnionFind {
        change the sets but may alter the internal structure of the data. */
     public void union(int v1, int v2) {
         // TODO
+        validate(v1);
+        validate(v2);
         int size1 = sizeOf(v1);
         int size2 = sizeOf(v2);
-        if(size1 < size2) {
-            ds[find(v1)] = find(v2);
-            ds[find(v2)] -= sizeOf(v1);
-        } else if(size1 > size2) {
-            ds[find(v2)] = find(v1);
-            ds[find(v1)] -= sizeOf(v2);
-        } else {
-            ds[find(v1)] = find(v2);
-            ds[find(v2)] -= sizeOf(v1);
+        if(!connected(v1, v2)) {
+            if (size1 < size2) {
+                ds[find(v1)] = find(v2);
+                ds[find(v2)] -= sizeOf(v1);
+            } else if (size1 > size2) {
+                ds[find(v2)] = find(v1);
+                ds[find(v1)] -= sizeOf(v2);
+            } else {
+                ds[find(v1)] = find(v2);
+                ds[find(v2)] -= sizeOf(v1);
+            }
         }
     }
 
@@ -68,15 +75,21 @@ public class UnionFind {
         // TODO
         validate(vertex);
         int root = vertex;
-        while(ds[root] != -1) {
+        while(ds[root] > -1) {
             root = ds[root];
         }
         int currentParent = ds[vertex];
-        while(currentParent != root) {
+        while(currentParent > -1) {
             ds[vertex] = root;
             vertex = currentParent;
             currentParent = ds[vertex];
         }
         return root;
+    }
+    public static void main(String[]Args) {
+        UnionFind uf = new UnionFind(6);
+        uf.union(0,1);
+        uf.union(2, 3);
+        uf.union(1, 2);
     }
 }
