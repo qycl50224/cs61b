@@ -25,7 +25,7 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T> {
         // TODO: Create new array with capacity elements.
         //       first, last, and fillCount should all be set to 0.
         size = capacity;
-        rb = (T []) new Object[capacity];
+        rb = (T[]) new Object[capacity];
         for(int i = 0; i < size; i++) {
             rb[i] = null;
         }
