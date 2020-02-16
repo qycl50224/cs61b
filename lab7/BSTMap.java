@@ -78,6 +78,11 @@ public class BSTMap<K extends Comparable<K>,V> implements Map61B<K,V> {
     }
     /**
      * a helper func to put key and value to Node n
+     * in this section i made a mistake, when i try to make it with void return,
+     * which means I just want to add and change the origin input Node n,
+     * but finally i find it is incorrect, because Node n is a type we designed,
+     * so it's type is reference type. It's un changeable, so we need to return Node
+     * and reassign it
      * @param n
      * @param key
      * @param value
