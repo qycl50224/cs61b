@@ -17,10 +17,11 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
             this.item = item;
             this.priority = priority;
         }
+        public node(node n) {
+            this.item = n.item;
+            this.priority = n.priority;
+        }
     }
-
-    private void less() {}
-    private void exch() {}
 
     /* Adds an item with the given priority value. Throws an
      * IllegalArgumentExceptionb if item is already present.
@@ -55,4 +56,44 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
      * doesn't exist. */
     @Override
     public void changePriority(T item, double priority) {}
+
+    private boolean less(int i, int j) {
+        if (pq[i].priority < pq[j].priority) {
+            return true;
+        }
+        return false;
+    }
+    private void exch(int i, int j) {
+        node temp = new node(pq[i]);
+        pq[i] = pq[j];
+        pq[j] = temp;
+    }
+
+    /**
+     * we are creating a minPQ, so the root is the smallest
+     * @param i
+     */
+    private void swim(int i) {
+        if (i <= 0) {
+            throw new IllegalArgumentException();
+        }
+        while (i > 1 && less(i, i / 2)) {
+            exch(i, i / 2);
+            i = i / 2;
+        }
+    }
+    private void sink(int i) {
+        if (i <= 0) {
+            throw new IllegalArgumentException();
+        }
+        while (i * 2 <= this.size) {
+            int j = i * 2;
+            if (j < this.size && !less(j,j + 1)) { // find the smaller one
+                j++; // presure that there are (j+1)th
+            }
+            if (!less(i, j)) {
+                exch(i, j);
+            }
+        }
+    }
 }
