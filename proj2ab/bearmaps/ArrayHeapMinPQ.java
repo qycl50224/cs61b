@@ -123,21 +123,24 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     }
 
     private void checkLength() {
-        if ((size/length) < 0.25) {
+        if (length > 100 && (size/length) < 0.25) {
             pq = smaller();
-        } else if (size/length > 0.75) {
+        } else if (length > 100 && size/length > 0.75) {
             pq = larger();
         }
+        System.out.println("the current pq maxN is " + length);
     }
 
     private node<T>[] smaller() {
         node<T>[] newAry = new node[1 + length / 2];
+        length /= 2;
         System.arraycopy(pq,1,newAry,1,size);
         return newAry;
     }
 
     private node<T>[] larger() {
         node<T>[] newAry = new node[1 + length * 2];
+        length *= 2;
         System.arraycopy(pq,1,newAry,1,size);
         return newAry;
     }
