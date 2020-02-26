@@ -1,23 +1,30 @@
 package bearmaps;
 
-import java.util.ArrayDeque;
+import org.junit.Test;
+import bearmaps.PrintHeapDemo;
+import static org.junit.Assert.assertEquals;
 
 public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
-    private node[] pq;
+    private node<T>[] pq;
+    private int length;
     private int size;
-    public ArrayHeapMinPQ(int size) {
-        this.size = size;
-        pq = (node[]) new Object[size+1];
+    public ArrayHeapMinPQ(int s) {
+        if (s < 0) {
+            throw new IllegalArgumentException();
+        }
+        length = s;
+        pq =  new node[s+1];
+        size = 0;
     }
 
-    public class node {
+    public class node<T> {
         private T item;
         private double priority;
         public node(T item, double priority) {
             this.item = item;
             this.priority = priority;
         }
-        public node(node n) {
+        public node(node<T> n) {
             this.item = n.item;
             this.priority = n.priority;
         }
@@ -28,16 +35,24 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
      * You may assume that item is never null. */
     @Override
     public void add(T item, double priority) {
-        for (node n: pq) {
-            if (n.item == item) {
-                throw new IllegalArgumentException();
-            }
+        if (contains(item)) {
+            throw new IllegalArgumentException();
         }
-        node n = new node(item, priority);
+        node<T> n = new node<T>(item, priority);
+        pq[++size] = n;
+        swim(size);
+        checkLength();
     }
     /* Returns true if the PQ contains the given item. */
     @Override
-    public boolean contains(T item) {}
+    public boolean contains(T item) {
+        for(int i = 1; i <= size; i++) {
+            if (pq[i].item == item) {
+                return true;
+            }
+        }
+        return false;
+    }
     /* Returns the minimum item. Throws NoSuchElementException if the PQ is empty. */
     @Override
     public T getSmallest() {
@@ -45,7 +60,14 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     }
     /* Removes and returns the minimum item. Throws NoSuchElementException if the PQ is empty. */
     @Override
-    public T removeSmallest() {}
+    public T removeSmallest() {
+        T i = pq[1].item;
+        exch(1, size--);
+        pq[size +1] = null;
+        sink(1);
+        checkLength();
+        return i;
+    }
     /* Returns the number of items in the PQ. */
     @Override
     public int size() {
@@ -55,7 +77,9 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     /* Changes the priority of the given item. Throws NoSuchElementException if the item
      * doesn't exist. */
     @Override
-    public void changePriority(T item, double priority) {}
+    public void changePriority(T item, double priority) {
+
+    }
 
     private boolean less(int i, int j) {
         if (pq[i].priority < pq[j].priority) {
@@ -64,7 +88,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         return false;
     }
     private void exch(int i, int j) {
-        node temp = new node(pq[i]);
+        node<T> temp = new node<>(pq[i]);
         pq[i] = pq[j];
         pq[j] = temp;
     }
@@ -86,14 +110,77 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         if (i <= 0) {
             throw new IllegalArgumentException();
         }
-        while (i * 2 <= this.size) {
+        while (i * 2 <= size) {
             int j = i * 2;
-            if (j < this.size && !less(j,j + 1)) { // find the smaller one
+            if (j < size && !less(j,j + 1)) { // find the smaller one
                 j++; // presure that there are (j+1)th
             }
             if (!less(i, j)) {
                 exch(i, j);
+                i = j;
             }
         }
+    }
+
+    private void checkLength() {
+        if ((size/length) < 0.25) {
+            pq = smaller();
+        } else if (size/length > 0.75) {
+            pq = larger();
+        }
+    }
+
+    private node<T>[] smaller() {
+        node<T>[] newAry = new node[1 + length / 2];
+        System.arraycopy(pq,1,newAry,1,size);
+        return newAry;
+    }
+
+    private node<T>[] larger() {
+        node<T>[] newAry = new node[1 + length * 2];
+        System.arraycopy(pq,1,newAry,1,size);
+        return newAry;
+    }
+
+    public void printSimpleHeapDrawing() {
+        int depth = ((int) (Math.log(pq.length) / Math.log(2)));
+        int level = 0;
+        int itemsUntilNext = (int) Math.pow(2, level);
+        for (int j = 0; j < depth; j++) {
+            System.out.print(" ");
+        }
+
+        for (int i = 1; i < pq.length; i++) {
+            System.out.printf("%c ",(Character) pq[i].item);
+            if (i == itemsUntilNext) {
+                System.out.println();
+                level++;
+                itemsUntilNext += Math.pow(2, level);
+                depth--;
+                for (int j = 0; j < depth; j++) {
+                    System.out.print(" ");
+                }
+            }
+        }
+        System.out.println();
+    }
+
+    @Test
+    public static void main(String args[]) {
+        ArrayHeapMinPQ<Character> pq = new ArrayHeapMinPQ<Character>(10);
+        pq.add('a', 2.2);
+        pq.add('b', 5.2);
+        pq.add('c', 2.3);
+        pq.add('d', 1.5);
+        pq.add('e',0.9);
+        pq.add('f', 9.7);
+        System.out.println(pq.removeSmallest()== 'e');
+        long start = System.currentTimeMillis();
+        System.out.println(pq.getSmallest() == 'd');
+        long end = System.currentTimeMillis();
+        System.out.println("Total time elapsed: " + (end - start)/1000.0 +  " seconds.");
+        pq.printSimpleHeapDrawing();
+
+
     }
 }
