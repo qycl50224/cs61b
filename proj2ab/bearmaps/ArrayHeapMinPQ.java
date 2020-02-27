@@ -96,12 +96,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     }
 
     private int getItem(T item) {
-        for (int i = 1; i < size; i++) {
-            if (pq[i].item == item) {
-                return i;
-            }
-        }
-        return 0;
+        return IndexMap.get(item);
     }
 
     private boolean less(int i, int j) {
