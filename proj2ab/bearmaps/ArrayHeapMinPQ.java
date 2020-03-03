@@ -135,10 +135,11 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
             if (j < size && !less(j,j + 1)) { // find the smaller one
                 j++; // presure that there are (j+1)th
             }
-            if (!less(i, j)) {
-                exch(i, j);
-                i = j;
+            if (less(i, j)) {
+                break;
             }
+            exch(i, j);
+            i = j;
         }
     }
 
