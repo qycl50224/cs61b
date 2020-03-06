@@ -1,5 +1,6 @@
 package bearmaps.hw4.lectureexample;
 
+import bearmaps.hw4.AStarSolver;
 import bearmaps.hw4.LazySolver;
 import bearmaps.hw4.ShortestPathsSolver;
 import bearmaps.hw4.SolutionPrinter;
@@ -36,5 +37,8 @@ public class DemoLectureExampleSolution {
 
         ShortestPathsSolver<Integer> solver = new LazySolver<>(wdg, start, goal, 10);
         SolutionPrinter.summarizeSolution(solver, " => ");
+
+        ShortestPathsSolver<Integer> Asolver = new AStarSolver<>(wdg, start, goal, 10);
+        SolutionPrinter.summarizeSolution(Asolver, " => ");
     }
 }

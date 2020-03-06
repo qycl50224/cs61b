@@ -136,10 +136,11 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
             if (j < size && !less(j,j + 1)) { // find the smaller one
                 j++; // presure that there are (j+1)th
             }
-            if (!less(i, j)) {
-                exch(i, j);
-                i = j;
+            if (less(i, j)) {
+                break;
             }
+            exch(i, j);
+            i = j;
         }
     }
 
@@ -193,7 +194,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         }
         System.out.println();
     }
-
+/*
     @Test
     public static void main(String args[]) {
         ArrayHeapMinPQ<Character> pq = new ArrayHeapMinPQ<Character>(10);
@@ -209,7 +210,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         long end = System.currentTimeMillis();
         System.out.println("Total time elapsed: " + (end - start)/1000.0 +  " seconds.");
         pq.printSimpleHeapDrawing();
-
-
     }
+    */
+
 }
