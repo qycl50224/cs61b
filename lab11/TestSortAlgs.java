@@ -1,16 +1,61 @@
 import edu.princeton.cs.algs4.Queue;
 
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 public class TestSortAlgs {
 
     @Test
     public void testQuickSort() {
+        Queue<Double> q = new Queue();
+        q.enqueue(5.);
+        q.enqueue(3.);
+        q.enqueue(0.7);
+        q.enqueue(13.);
+        q.enqueue(29.);
+        q.enqueue(0.00001);
+        q.enqueue(9.);
+        q = QuickSort.quickSort(q);
+
+        assertTrue(isSorted(q));
+        Queue<String> pas = new Queue<>();
+        pas.enqueue("Joe");
+        pas.enqueue("Nancy");
+        pas.enqueue("Caroline");
+        pas.enqueue("Jeffery");
+        pas.enqueue("Tom");
+        pas.enqueue("Ava");
+        pas.enqueue("Peter");
+        pas.enqueue("Josh");
+        pas.enqueue("Hug");
+        assertTrue(isSorted(MergeSort.mergeSort(pas)));
 
     }
 
     @Test
     public void testMergeSort() {
+        Queue<Double> q = new Queue();
+        q.enqueue(5.);
+        q.enqueue(3.);
+        q.enqueue(0.7);
+        q.enqueue(13.);
+        q.enqueue(29.);
+        q.enqueue(0.00001);
+        q.enqueue(9.);
+        q = MergeSort.mergeSort(q);
+
+        assertTrue(isSorted(q));
+        Queue<String> pas = new Queue<>();
+        pas.enqueue("Joe");
+        pas.enqueue("Nancy");
+        pas.enqueue("Caroline");
+        pas.enqueue("Jeffery");
+        pas.enqueue("Tom");
+        pas.enqueue("Ava");
+        pas.enqueue("Peter");
+        pas.enqueue("Josh");
+        pas.enqueue("Hug");
+        assertTrue(isSorted(MergeSort.mergeSort(pas)));
 
     }
 
