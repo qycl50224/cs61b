@@ -84,11 +84,88 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
      */
     @Override
     public Map<String, Object> processRequest(Map<String, Double> requestParams, Response response) {
-        //System.out.println("yo, wanna know the parameters given by the web browser? They are:");
-        //System.out.println(requestParams);
+//        System.out.println("yo, wanna know the parameters given by the web browser? They are:");
+//        System.out.println(requestParams);
         Map<String, Object> results = new HashMap<>();
-        System.out.println("Since you haven't implemented RasterAPIHandler.processRequest, nothing is displayed in "
-                + "your browser.");
+//        System.out.println("Since you haven't implemented RasterAPIHandler.processRequest, nothing is displayed in "
+//                + "your browser.");
+        double lrlon = requestParams.get("lrlon");
+        double ullon = requestParams.get("ullon");
+        double ullat = requestParams.get("ullat");
+        double lrlat = requestParams.get("lrlat");
+        double width = requestParams.get("w");
+
+        // check if the input is available;
+        if ( lrlon > 180 || lrlon < -180 || ullon > 180 || ullon < -180
+            || ullat > 90 || ullat < -90 || lrlat > 90 || lrlat < -90
+            || ullon > lrlon || ullat < lrlat) {
+            results.put("query_success", false);
+            return results;
+        }
+
+        double LonDPP = (lrlon - ullon) / width; // the requested img
+        // find the different map's LonDPP
+        double DiLonDPP = (Constants.ROOT_LRLON-Constants.ROOT_ULLON) / Constants.TILE_SIZE;
+        int Depth = 0;
+        for (int i = 0; i <= 6; i++) {
+            if (DiLonDPP <= LonDPP) {
+                break;
+            }
+            Depth = i + 1;
+            DiLonDPP = DiLonDPP / 2;
+        }
+
+        results.put("depth", Depth);
+
+        // the length of x and y's blocks, x starts from 1
+        double totalX = Math.pow(2,Depth);
+        double totalY = Math.pow(2,Depth);
+//        System.out.println(totalX);
+
+        // calculate the single block's width and height
+        double widthPerBlock = (Constants.ROOT_LRLON-Constants.ROOT_ULLON) / totalX;
+        double heightPerBlock = (Constants.ROOT_ULLAT-Constants.ROOT_LRLAT) / totalY;
+//        System.out.println("widthPerBlock:" + widthPerBlock);
+//        System.out.println("heightPerBlock:" + heightPerBlock);
+
+
+        // find the upper left block and low right block
+        int ulx = 0;
+        int uly = 0;
+        int lrx = 0;
+        int lry = 0;
+
+        while (ullon > Constants.ROOT_ULLON + (ulx + 1) * widthPerBlock) {
+            ulx = ulx + 1;
+        }
+        results.put("raster_ul_lon", Constants.ROOT_ULLON + ulx * widthPerBlock);
+
+        while (Constants.ROOT_ULLAT - (uly + 1) * heightPerBlock > ullat) {
+            uly = uly + 1;
+        }
+        results.put("raster_ul_lat", Constants.ROOT_ULLAT - uly * heightPerBlock);
+
+        while (lrlon > Constants.ROOT_ULLON + (lrx + 1) * widthPerBlock) {
+            lrx = lrx + 1;
+        }
+        results.put("raster_lr_lon", Constants.ROOT_ULLON + (lrx + 1) * widthPerBlock);
+
+        while (Constants.ROOT_ULLAT - (lry + 1) * heightPerBlock > lrlat) {
+            lry = lry + 1;
+        }
+        results.put("raster_lr_lat", Constants.ROOT_ULLAT - (lry + 1) * heightPerBlock);
+
+        results.put("query_success", true);
+
+        // add file to string[][]
+        String[][] files = new String[lry-uly+1][lrx-ulx+1];
+        for (int i = 0; i < lry-uly+1; i++) {
+            for (int j = 0; j < lrx-ulx+1; j++) {
+                files[i][j] = "d"+Depth+"_x"+(ulx+j)+"_y"+(uly+i)+".png";
+            }
+        }
+        results.put("render_grid", files);
+
         return results;
     }
 
